@@ -1,0 +1,630 @@
+<title>Agent Led Growth Initiatives</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky bar (view switch + section nav), overview, one card per use case (chart left, evidence right), validation matrix last */
+:root{
+  --bg:#f3f5f8;--surface:#fff;--surface2:#e9eef4;--fg:#17202b;--muted:#586577;--line:#d8dfe8;
+  --accent:#0a62c9;--accent-soft:#dbe9fb;--good:#1a7f4b;--good-soft:#d9f0e3;--warn:#a85f00;--warn-soft:#fbebd0;--crit:#c0392b;--crit-soft:#f8dedb;
+  --c1:#0a62c9;--c2:#0e8a7d;--c3:#b36a00;--c4:#8a3ffc;--c5:#c0392b;--grid:#e3e8ef;
+  --font-body:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;--font-head:"Space Grotesk",Inter,system-ui,sans-serif;--font-mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e141b;--surface:#16202b;--surface2:#1f2c3a;--fg:#e6edf5;--muted:#93a2b4;--line:#2a3a4b;
+  --accent:#5aa2f0;--accent-soft:#17324f;--good:#52c58a;--good-soft:#123222;--warn:#e2a23b;--warn-soft:#41300f;--crit:#f07d6f;--crit-soft:#46201c;
+  --c1:#5aa2f0;--c2:#4cc4b4;--c3:#e2a23b;--c4:#b794f6;--c5:#f07d6f;--grid:#243242;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e141b;--surface:#16202b;--surface2:#1f2c3a;--fg:#e6edf5;--muted:#93a2b4;--line:#2a3a4b;
+  --accent:#5aa2f0;--accent-soft:#17324f;--good:#52c58a;--good-soft:#123222;--warn:#e2a23b;--warn-soft:#41300f;--crit:#f07d6f;--crit-soft:#46201c;
+  --c1:#5aa2f0;--c2:#4cc4b4;--c3:#e2a23b;--c4:#b794f6;--c5:#f07d6f;--grid:#243242;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font-body);font-size:14px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+.wrap{max-width:1200px;margin:0 auto}
+h1,h2,h3{font-family:var(--font-head);margin:0;text-wrap:balance}
+h1{font-size:28px;font-weight:600;letter-spacing:-.01em}
+h2{font-size:19px;font-weight:600}
+h3{font-size:14px;font-weight:600}
+p{margin:0}
+.top{padding-top:26px;display:grid;gap:10px}
+.sub{color:var(--muted);max-width:78ch}
+.meta{display:flex;flex-wrap:wrap;gap:8px;font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.meta span{background:var(--surface2);padding:3px 8px;border-radius:4px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--bg);margin-top:14px;padding:10px 0;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--surface)}
+.seg button{font:inherit;font-size:12.5px;font-weight:500;border:0;background:transparent;color:var(--muted);padding:5px 12px;cursor:pointer}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.navs{display:flex;gap:2px;overflow-x:auto;flex:1;min-width:0}
+.navs a{color:var(--muted);text-decoration:none;padding:5px 9px;border-radius:5px;white-space:nowrap;font-size:13px;font-weight:500}
+.navs a:hover,.navs a:focus-visible{background:var(--surface2);color:var(--fg);outline:none}
+.gnote{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+section{margin-top:34px;scroll-margin-top:70px}
+.lead{color:var(--muted);max-width:80ch;margin-top:4px}
+.tag{font-family:var(--font-mono);font-size:11px;padding:2px 7px;border-radius:3px;white-space:nowrap}
+.tag.m{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent)}
+.tag.i{color:var(--warn);border:1px dashed var(--warn)}
+.chip{font-size:11px;font-weight:600;padding:2px 9px;border-radius:10px;white-space:nowrap;border:1px solid}
+.chip.ok{color:var(--good);background:var(--good-soft);border-color:var(--good)}
+.chip.chg{color:var(--warn);background:var(--warn-soft);border-color:var(--warn)}
+.chip.join{color:var(--crit);background:var(--crit-soft);border-color:var(--crit)}
+.chip.fut{color:var(--accent);background:var(--accent-soft);border-color:var(--accent)}
+.chip.new{color:var(--c4);border-color:var(--c4)}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr))}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;min-width:0}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font-family:var(--font-head);font-size:24px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.25;overflow-wrap:anywhere}
+.kpi .s{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.dl{font-family:var(--font-mono);font-size:11px;padding:1px 6px;border-radius:3px;background:var(--surface2);color:var(--muted)}
+.dl.good{background:var(--good-soft);color:var(--good)} .dl.bad{background:var(--crit-soft);color:var(--crit)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;margin-top:14px;display:grid;gap:14px;min-width:0}
+.uc{margin-top:10px;display:grid;gap:12px;min-width:0}
+.segwrap{margin-left:auto;display:flex;gap:10px;align-items:center}
+.banner{background:var(--warn-soft);border:1px solid var(--warn);color:var(--fg);padding:10px 14px;border-radius:6px;font-size:13px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.card-h{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.card-h .id{font-family:var(--font-mono);font-size:12px;color:var(--muted)}
+.card-h .id::before{content:"Use case "}
+.card-h h2{min-width:120px;font-size:19px}
+.cols{display:grid;gap:16px;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+@media (max-width:860px){.cols{grid-template-columns:minmax(0,1fr)}}
+.box{display:grid;gap:8px;align-content:start;min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px}
+.box-h{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.chart{position:relative;min-height:230px}
+.chart svg{display:block;width:100%}
+.chart svg text{fill:var(--muted);font-family:var(--font-mono);font-size:10.5px}
+.tip{position:absolute;pointer-events:none;background:var(--fg);color:var(--bg);font-size:12px;padding:5px 8px;border-radius:4px;display:none;white-space:nowrap;z-index:3;font-family:var(--font-mono)}
+.leg{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--muted)}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:12px;padding:5px 10px 5px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:6px 10px 6px 0;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--font-mono);font-size:12px;white-space:nowrap}
+.bars{display:grid;gap:6px}
+.br{display:grid;grid-template-columns:minmax(80px,40%) 1fr auto;gap:10px;align-items:center;font-size:13px}
+.br .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.br .tr{background:var(--surface2);height:9px;border-radius:2px;overflow:hidden}
+.br .fl{height:100%;background:var(--c1);border-radius:2px}
+.br .vl{font-family:var(--font-mono);font-size:12px;color:var(--muted);text-align:right;min-width:60px}
+.ev{display:grid;gap:6px;font-size:13px}
+.ev div{padding:9px 14px;border-radius:0 6px 6px 0;background:var(--surface2);border-left:3px solid var(--muted)}
+.ev .v{border-left-color:var(--accent);background:var(--accent-soft)} .ev .g{border-left-color:var(--warn);background:var(--warn-soft)} .ev .a{border-left-color:var(--muted)}
+.ev b{font-weight:600}
+.ev small{display:block;color:var(--muted);font-size:11px;font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.04em;margin-bottom:1px}
+.qs{display:flex;flex-wrap:wrap;gap:8px}
+.qs button{font:inherit;font-size:13px;border:1px solid var(--line);background:var(--surface);color:var(--fg);padding:6px 11px;border-radius:16px;cursor:pointer}
+.qs button[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent)}
+pre{margin:0;background:var(--surface2);padding:10px 12px;border-radius:6px;font-family:var(--font-mono);font-size:12px;overflow-x:auto;white-space:pre}
+.stage{display:grid;gap:6px}
+.st{display:grid;grid-template-columns:minmax(120px,32%) 1fr auto;gap:10px;align-items:center;font-size:13px}
+.st .tr{background:var(--surface2);height:14px;border-radius:2px;overflow:hidden}
+.st .fl{height:100%;background:var(--c2)}
+.mx td:first-child{white-space:nowrap;font-weight:600}
+.mx td{font-size:12.5px}
+.foot{margin-top:36px;color:var(--muted);font-size:12px;max-width:95ch}
+@media (max-width:520px){.br{grid-template-columns:minmax(70px,36%) 1fr auto}.st{grid-template-columns:minmax(90px,34%) 1fr auto}h1{font-size:23px}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <h1>Agent Led Growth Initiatives</h1>
+  <p class="sub">Mock dashboard for the use cases we can build when three months of per-minute Cloudflare logs are in ADS. Each section has its own Monthly, Daily and Hourly view, and shows what the 25-file sample (14.7M requests, 2026-11-10) confirmed or changed. <a href="https://claude.ai/artifact/SLu6cqha3hmPfh1C7B6Qy8" style="color:var(--accent)">Read the product requirements.</a></p>
+  <div class="meta"><span>zone: digitalocean.com</span><span>mock window: 2026-08-11 to 2026-11-10</span><span>granularity: 1 minute</span><span>validation sample: 25 files</span></div>
+  <div class="banner"><span class="tag m">Measured</span> computed from the 25-file sample, 2026-11-10. <span class="tag i">Illustrative</span> synthetic series that show how each screen will look with three months of data.</div>
+</header>
+
+<div class="bar">
+  <nav class="navs" aria-label="Sections">
+    <a href="#overview">Overview</a><a href="#A">A Agents</a><a href="#B">B Adoption</a><a href="#C">C Auth</a><a href="#D">D Regions</a><a href="#E">E Docs</a><a href="#F">F Migration</a><a href="#G">G Abuse</a><a href="#H">H Telemetry</a><a href="#I">I Ask</a><a href="#J">J Crawlers</a><a href="#K">K Cost</a><a href="#L">L Anomalies</a><a href="#M">M Versions</a><a href="#N">N Reliability</a><a href="#matrix">Validation</a>
+  </nav>
+</div>
+
+<section id="overview">
+  <div class="card-h"><h2>Overview</h2><span class="tag" id="ovtag"></span></div>
+  <p class="lead">Traffic by client type for the selected view. Telemetry is left out here because it dominates the totals; it has its own card (H).</p>
+  <div class="uc">
+    <div class="kpis" id="ovk"></div>
+    <div class="box"><div class="chart" id="ovchart" data-keys="browser,sdk_infra,http_lib,ai_client,crawler" data-index="1"></div><div class="leg" id="ovleg"></div></div>
+  </div>
+</section>
+
+<section id="A">
+  <div class="uc">
+    <div class="card-h"><span class="id">A</span><h2>Agent traffic identification</h2><span class="chip chg">Validated, with changes</span></div>
+    <div class="kpis" data-kpis="ai_client:AI and MCP clients:up:count;sdk_infra:SDK and infra requests:neutral:count;crawler:Crawlers and monitors:neutral:count"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>Requests by client class</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="ai_client,sdk_infra,crawler,http_lib" data-index="1"></div><div class="leg" data-leg></div></div>
+      <div class="box"><div class="box-h"><h3>Client taxonomy, share of non-telemetry</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["Browsers",42.9],["SDKs, IaC, infra agents",27.0],["HTTP libraries",18.1],["Other (webhooks, scanners)",7.3],["Crawlers and monitors",2.3],["Empty user agent",2.1],["AI and MCP clients",0.19]]' data-fmt="pct"></div></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small>Named agents separate cleanly by user agent: Cursor, Codex, Claude-User, Claude Code, opencode. Unlabeled agents exist: python-httpx2, undici, Bun and node are <b>14.9%</b> of MCP requests, and 15 of 16 python-httpx2 IPs return across hourly slices.</div>
+      <div class="g"><small>Changed</small><b>JA3 alone cannot label agents.</b> Cursor, Claude Code, Claude-User and opencode share TLS fingerprints with generic Node and Bun clients (93% of generic node requests match a named agent's JA3). Codex and python-httpx have their own. <b>Header patterns are unavailable:</b> RequestHeaders is empty in all 14.7M rows. Classify on behavior instead: OAuth discovery, then POST /mcp, then session shape.</div>
+      <div class="a"><small>3 months adds</small>Fingerprint clusters that stabilise, a weekly "new agent seen" list, and a labeled training set for a behavior classifier.</div>
+    </div>
+  </div>
+</section>
+
+<section id="B">
+  <div class="uc">
+    <div class="card-h"><span class="id">B</span><h2>Agent adoption funnel</h2><span class="chip chg">Validated, retention needs a stable key</span></div>
+    <div class="kpis" data-kpis="mcp:MCP server requests:up:count;ai_client:AI and MCP clients:up:count"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>MCP requests</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="mcp"></div>
+        <div id="cohort"></div></div>
+      <div class="box"><div class="box-h"><h3>MCP sign-in completion by client IP</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="tw"><table><thead><tr><th>Client</th><th class="n">IPs</th><th class="n">Signed in</th><th class="n">Completed</th><th class="n">Return</th></tr></thead><tbody>
+        <tr><td>Claude-User</td><td class="n">64</td><td class="n">62</td><td class="n">96.9%</td><td class="n">73%</td></tr>
+        <tr><td>python-httpx2</td><td class="n">16</td><td class="n">14</td><td class="n">87.5%</td><td class="n">94%</td></tr>
+        <tr><td>claude-code</td><td class="n">39</td><td class="n">32</td><td class="n">82.1%</td><td class="n">23%</td></tr>
+        <tr><td>codex-mcp-client</td><td class="n">81</td><td class="n">63</td><td class="n">77.8%</td><td class="n">42%</td></tr>
+        <tr><td>Cursor</td><td class="n">49</td><td class="n">36</td><td class="n">73.5%</td><td class="n">14%</td></tr></tbody></table></div>
+        <p class="gnote">Return = IPs seen in two or more hourly slices.</p></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small>The funnel works: first contact, 401 challenge, discovery, authenticated call. <b>A 401 is the normal OAuth challenge, not a failure.</b> Measure IPs that never reach a successful call. The agent platform also shows <b>115</b> distinct agent IDs refreshing tokens and <b>356</b> sessions in the sampled minutes.</div>
+      <div class="g"><small>Changed</small>Retention by IP is noisy. Cursor IPs rarely repeat, which looks like IP churn, not abandonment. <b>Real retention needs a stable key</b> such as token or account ID joined in ADS.</div>
+      <div class="a"><small>3 months adds</small>Weekly cohorts, time to first success, and a deprecation list for endpoints nobody returns to.</div>
+    </div>
+  </div>
+</section>
+
+<section id="C">
+  <div class="uc">
+    <div class="card-h"><span class="id">C</span><h2>Auth friction and first-401 analysis</h2><span class="chip ok">Validated, stronger</span></div>
+    <div class="kpis" data-kpis="api401r:API 401 rate:down:rate;api429r:API 429 rate:down:rate"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>401 and 429 rate on api.digitalocean.com</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="api401r,api429r" data-unit="rate"></div><div class="leg" data-leg></div></div>
+      <div class="box"><div class="box-h"><h3>Ranked failure causes, requests in 25 minutes</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["401 domain records",148952],["429 domain records",72148],["404 domain records",20142],["401 droplet by id",14565],["401 registry auth",13018],["401 droplets list",9631],["401 account",8255],["429 droplets list",7890],["429 registry auth",6449],["MCP discovery 404",119]]' data-fmt="int"></div></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small>Only <b>1.9%</b> of source IPs with a domain-record 401 also got a 200 in the same minute, and <b>1.4%</b> for 429. These are stuck loops, not transient failures. cert-manager causes <b>82%</b> of the domain-record 401s.</div>
+      <div class="g"><small>Changed</small>Failure cause should be ranked per client and endpoint, not as one blended rate. The MCP path <b>/.well-known/oauth-protected-resource/mcp</b> returns 404 and is a cheap fix.</div>
+      <div class="a"><small>3 months adds</small>Loop duration per client, time to recovery after a token fix, and the effect of quota or header changes.</div>
+    </div>
+  </div>
+</section>
+
+<section id="D">
+  <div class="uc">
+    <div class="card-h"><span class="id">D</span><h2>Regional and service demand</h2><span class="chip ok">Validated</span></div>
+    <div class="kpis" data-kpis="r_fra1:Frankfurt OTLP:up:count;r_nyc3:New York OTLP:up:count;r_sgp1:Singapore OTLP:up:count"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>OTLP requests by region endpoint</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="r_fra1,r_nyc3,r_ams3,r_nbg1,r_sgp1"></div><div class="leg" data-leg></div></div>
+      <div class="box"><div class="box-h"><h3>p95 time to first byte by edge location, ms</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="tw"><table><thead><tr><th>Edge</th><th class="n">API</th><th class="n">Console</th><th class="n">OTLP</th></tr></thead><tbody>
+        <tr><td>EWR</td><td class="n">590</td><td class="n">490</td><td class="n">35</td></tr><tr><td>FRA</td><td class="n">650</td><td class="n">670</td><td class="n">25</td></tr>
+        <tr><td>AMS</td><td class="n">660</td><td class="n">700</td><td class="n">25</td></tr><tr><td>LHR</td><td class="n">720</td><td class="n">730</td><td class="n">25</td></tr>
+        <tr><td>SIN</td><td class="n">980</td><td class="n">970</td><td class="n">25</td></tr></tbody></table></div></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small>Demand splits cleanly by country, edge location and region endpoint. <b>Singapore p95 is about 1.7 times New York on the API</b> and about 2 times on the console, while telemetry latency is flat. Regional growth is therefore a deployment signal for control-plane services.</div>
+      <div class="a"><small>3 months adds</small>Day-of-week patterns, regional growth curves, and p95 trends after each regional launch. One sampled minute per hour cannot show these.</div>
+    </div>
+  </div>
+</section>
+
+<section id="E">
+  <div class="uc">
+    <div class="card-h"><span class="id">E</span><h2>Docs and content as an agent surface</h2><span class="chip ok">Validated, defects found</span></div>
+    <div class="kpis" data-kpis="pv_crawler:Crawler page views:neutral:count;pv_human:Browser page views:up:count"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>Page views on www and docs</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="pv_human,pv_crawler"></div><div class="leg" data-leg></div></div>
+      <div class="box"><div class="box-h"><h3>Response mix, HTML page views</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="tw"><table><thead><tr><th>Host, client</th><th class="n">2xx</th><th class="n">3xx</th><th class="n">404</th></tr></thead><tbody>
+        <tr><td>www, browser</td><td class="n">55.0%</td><td class="n">27.3%</td><td class="n">13.2%</td></tr><tr><td>www, crawler</td><td class="n">75.8%</td><td class="n">20.5%</td><td class="n">3.2%</td></tr>
+        <tr><td>docs, browser</td><td class="n">60.9%</td><td class="n">31.5%</td><td class="n">7.2%</td></tr><tr><td>docs, crawler</td><td class="n">62.4%</td><td class="n">20.4%</td><td class="n">9.5%</td></tr></tbody></table></div>
+        <h3>Top missing resources</h3>
+        <div class="bars" data-bars='[["tutorial_toast",1519],["question_toast",873],["recommended_content_profile",648],["tutorial_popular_topics",316],["featured_blog_tags",163]]' data-fmt="int"></div></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small>Crawler views are concentrated in /community and the home page. Markdown versions (<b>index.html.md</b>) and <b>llms.txt</b> are already fetched by non-browser clients, so an agent-readable content strategy is measurable.</div>
+      <div class="g"><small>Found</small>Five www content endpoints under <b>/api/static-content/v1/global_contents/</b> return 404 thousands of times. That is a site defect worth fixing, independent of agents.</div>
+      <div class="a"><small>3 months adds</small>Pages with high agent demand and poor structure, 404 trends per page, and agent-to-human read ratios per section.</div>
+    </div>
+  </div>
+</section>
+
+<section id="F">
+  <div class="uc">
+    <div class="card-h"><span class="id">F</span><h2>Developer-to-agent migration</h2><span class="chip join">Needs account or token join</span></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>Journey: console, then CLI or API, then agent</h3><span class="tag i">Illustrative</span></div>
+        <div class="stage" id="journey"></div>
+        <p class="gnote">Share of accounts active in each stage, by cohort month. Requires an account key.</p></div>
+      <div class="box"><div class="box-h"><h3>Why IP cohorts are not enough</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["MCP IPs also seen in console",15.4],["SDK API IPs also seen in console",11.4],["MCP IPs also seen on SDK API",3.5]]' data-fmt="pct"></div></div>
+    </div>
+    <div class="ev">
+      <div class="g"><small>Changed</small>Linking by IP fails: only <b>15.4%</b> of MCP IPs appear in console traffic the same day, because of NAT, CI runners and IP churn. <b>This use case cannot be built from the logs alone.</b></div>
+      <div class="a"><small>3 months adds</small>Keep it, but gate it on a join to account or token data in ADS. With that key, three months give cohort conversion and time from first console login to first agent call.</div>
+    </div>
+  </div>
+</section>
+
+<section id="G">
+  <div class="uc">
+    <div class="card-h"><span class="id">G</span><h2>Rate-limit and abuse intelligence</h2><span class="chip ok">Validated</span></div>
+    <div class="kpis" data-kpis="api429r:API 429 rate:down:rate;api401r:API 401 rate:down:rate"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>Persistent versus one-off offenders</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="tw"><table><thead><tr><th>Segment</th><th class="n">IPs</th><th class="n">In 8+ slices</th><th class="n">Their share</th><th class="n">Top 10</th></tr></thead><tbody>
+        <tr><td>401 domain records</td><td class="n">206</td><td class="n">58</td><td class="n">81.5%</td><td class="n">31.5%</td></tr>
+        <tr><td>429 domain records</td><td class="n">40</td><td class="n">18</td><td class="n">86.1%</td><td class="n">66.3%</td></tr>
+        <tr><td>401 other</td><td class="n">2,097</td><td class="n">509</td><td class="n">84.5%</td><td class="n">31.4%</td></tr>
+        <tr><td>429 other</td><td class="n">75</td><td class="n">14</td><td class="n">83.6%</td><td class="n">90.5%</td></tr></tbody></table></div></div>
+      <div class="box"><div class="box-h"><h3>Block and challenge rules, events in 25 minutes</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["block: public-api root and wildcard",14000],["challenge: cloud login",626],["challenge: www root",237],["block: bot score 2 or less",173],["block: XSS JavaScript events",126],["block: SQLi WaitFor",75]]' data-fmt="int"></div></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small><b>Chronic loops dominate.</b> About 80 to 86% of error volume comes from IPs that appear in eight or more of 25 hourly slices. A small allowlist and per-client quota would remove most 429s.</div>
+      <div class="a"><small>3 months adds</small>Offender lifetime, cost per offender in origin time, and which fixes ended a loop. Sonar hosts often score as attacks, so exclude them from abuse models.</div>
+    </div>
+  </div>
+</section>
+
+<section id="H">
+  <div class="uc">
+    <div class="card-h"><span class="id">H</span><h2>Telemetry fleet health and capacity</h2><span class="chip ok">Validated</span></div>
+    <div class="kpis" data-kpis="telemetry:OTLP requests:up:count"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>OTLP request volume</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="telemetry" data-forecast="1"></div><div class="leg"><span><i style="background:var(--c1)"></i>Observed</span><span><i style="background:var(--c3)"></i>Forecast (illustrative)</span></div></div>
+      <div class="box"><div class="box-h"><h3>Collector versions</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["DOKS collector 0.130",82.3],["DOKS collector 0.138",15.7],["Contrib 0.156",0.9],["Contrib 0.155",0.5],["Contrib 0.114",0.3]]' data-fmt="pct"></div></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small>One collector build sends <b>82.3%</b> of OTLP traffic and older customer builds are visible. OTLP non-200 rate is about <b>0.004%</b> and p95 time to first byte is about 31 ms.</div>
+      <div class="a"><small>3 months adds</small>A real capacity forecast with seasonality, version migration speed after a release, and error rate by region. Telemetry is 86% of rows, so keep an hourly roll-up table for it.</div>
+    </div>
+  </div>
+</section>
+
+<section id="I">
+  <div class="uc">
+    <div class="card-h"><span class="id">I</span><h2>Ask the edge</h2><span class="chip fut">Needs semantic layer</span></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>Natural-language query</h3><span class="tag i">Illustrative</span></div>
+        <div class="qs" id="qs"></div>
+        <pre id="sql"></pre>
+        <div class="tw"><table id="qres"></table></div></div>
+      <div class="box"><div class="box-h"><h3>What must exist first</h3></div>
+        <div class="ev">
+          <div class="a"><small>Needed</small>A governed <b>agent_client</b> dimension (use case A), host groups, and named metrics such as sign-in completion.</div>
+          <div class="g"><small>Risk confirmed</small>The word "agent" is ambiguous in the logs: DigitalOcean's own monitoring agent (<b>do-agent</b>) sends far more requests than AI clients, and telemetry is 86% of all rows. A query that ignores these gives wrong answers.</div>
+          <div class="v"><small>Acceptance test</small>A list of golden questions with known answers, checked each release.</div>
+        </div></div>
+    </div>
+  </div>
+</section>
+
+<section id="J">
+  <div class="uc">
+    <div class="card-h"><span class="id">J</span><h2>AI crawler ledger and referral return</h2><span class="chip chg">Validated, 402 pricing deferred</span></div>
+    <div class="kpis" data-kpis="cr_training:Training crawls:neutral:count;cr_user:User-triggered fetches:up:count;cr_search:Search-index crawls:neutral:count"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>Crawler fetches by purpose</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="cr_training,cr_search,cr_user,cr_monitor"></div><div class="leg" data-leg></div></div>
+      <div class="box"><div class="box-h"><h3>Operators and verification, requests in 25 minutes</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="tw"><table><thead><tr><th>Operator</th><th>Purpose</th><th class="n">Total</th><th class="n">Unverified</th></tr></thead><tbody>
+        <tr><td>GPTBot</td><td>Training</td><td class="n">1,398</td><td class="n">69.2%</td></tr><tr><td>Amazonbot</td><td>Search</td><td class="n">1,359</td><td class="n">0.2%</td></tr>
+        <tr><td>Bingbot</td><td>Search</td><td class="n">1,188</td><td class="n">0.1%</td></tr><tr><td>Googlebot</td><td>Search</td><td class="n">1,011</td><td class="n">3.6%</td></tr>
+        <tr><td>Bytespider</td><td>Training</td><td class="n">532</td><td class="n">79.9%</td></tr><tr><td>Claude-User</td><td>User-triggered</td><td class="n">426</td><td class="n">100%</td></tr>
+        <tr><td>OAI-SearchBot</td><td>Search</td><td class="n">371</td><td class="n">1.1%</td></tr><tr><td>PerplexityBot</td><td>Search</td><td class="n">94</td><td class="n">100%</td></tr></tbody></table></div></div>
+      <div class="box"><div class="box-h"><h3>Visits from AI assistants, 25 minutes</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["utm chatgpt.com",39],["utm openai",27],["copilot.microsoft.com",4],["grok.com",2],["gemini.google.com",1]]' data-fmt="int"></div></div>
+      <div class="box"><div class="box-h"><h3>Where they land</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["/products/managed-agents",25],["/pricing/droplets",13],["/",5],["console sign-up pages",8]]' data-fmt="int"></div></div>
+    </div>
+    <div class="ev">
+      <div class="v"><small>Validated</small>OpenAI crawl fetches (GPTBot, OAI-SearchBot, ChatGPT-User) are about <b>28 times</b> its referral visits (1,839 against 66) in the sample. <b>UTM tags work</b> for attribution, and AI visits concentrate on the Managed Agents page.</div>
+      <div class="g"><small>Changed</small>The verified-bot flag in BotTags and BotScoreSrc replaces the missing bot category. Unverified can mean spoofed or simply no published IP list, so treat it as a review queue. <b>Pay-per-crawl 402 pricing is deferred:</b> there are no 402 responses yet, so run it in shadow mode first.</div>
+      <div class="a"><small>3 months adds</small>Per-URL ratios, refetch frequency as a grounding signal, and shadow-priced revenue per operator.</div>
+    </div>
+  </div>
+</section>
+
+<section id="K">
+  <div class="uc">
+    <div class="card-h"><span class="id">K</span><h2>Cost to serve by client type</h2><span class="chip new">Proposed</span></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>Per page view, www and docs</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="tw"><table><thead><tr><th>Client</th><th class="n">Views</th><th class="n">KB per view</th><th class="n">Origin ms</th><th class="n">Cache bypass</th></tr></thead><tbody>
+        <tr><td>Browsers</td><td class="n">13,611</td><td class="n">67.8</td><td class="n">193</td><td class="n">32.7%</td></tr>
+        <tr><td>Crawlers and monitors</td><td class="n">6,726</td><td class="n">114.1</td><td class="n">220</td><td class="n">52.7%</td></tr>
+        <tr><td>AI clients</td><td class="n">150</td><td class="n">n/a</td><td class="n">n/a</td><td class="n">79.3%</td></tr></tbody></table></div></div>
+      <div class="box"><div class="box-h"><h3>Crawler share of page views</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="pv_crawler" data-share="pv_human"></div></div>
+    </div>
+    <div class="ev"><div class="v"><small>Validated</small>A crawler view costs <b>1.7 times the bytes</b> of a browser view and is far more likely to miss the cache. That sets a cost floor for any crawl pricing.</div>
+    <div class="a"><small>3 months adds</small>Egress and origin cost per operator, and the saving from caching or serving markdown to agents.</div></div>
+  </div>
+</section>
+
+<section id="L">
+  <div class="uc">
+    <div class="card-h"><span class="id">L</span><h2>Incident and anomaly timeline</h2><span class="chip new">Proposed</span></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>API 429 rate with anomaly band</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="api429r" data-unit="rate" data-band="1"></div><div class="leg"><span><i style="background:var(--c1)"></i>Rate</span><span><i style="background:var(--crit)"></i>Beyond two standard deviations</span></div></div>
+      <div class="box"><div class="box-h"><h3>How it would be used</h3></div>
+        <div class="ev">
+          <div class="v"><small>Validated</small>The hourly samples already vary a lot: 429 counts range <b>3.4 times</b> between quietest and busiest sampled minute, and request volume peaks at 18:29 UTC.</div>
+          <div class="a"><small>3 months adds</small>Per-minute change-point detection on errors and latency, an incident log tied to releases, and alerts that name the client and endpoint behind a spike.</div>
+        </div></div>
+    </div>
+  </div>
+</section>
+
+<section id="M">
+  <div class="uc">
+    <div class="card-h"><span class="id">M</span><h2>Client versions and deprecation readiness</h2><span class="chip new">Proposed</span></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>cert-manager versions, errors in 25 minutes</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="tw"><table><thead><tr><th>Version</th><th class="n">401</th><th class="n">429</th></tr></thead><tbody id="cmrows"></tbody></table></div></div>
+      <div class="box"><div class="box-h"><h3>Other integrations</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["godo 401",42816],["godo 429",20150],["GitHub webhooks to App Platform",40002],["doctl 401",4141]]' data-fmt="int"></div></div>
+    </div>
+    <div class="ev"><div class="v"><small>Validated</small>Even recent cert-manager releases generate 401s, and older ones still run. Version tables show which clients to contact before an API change.</div>
+    <div class="a"><small>3 months adds</small>Adoption curves after each release and a "safe to deprecate" date per endpoint and client.</div></div>
+  </div>
+</section>
+
+<section id="N">
+  <div class="uc">
+    <div class="card-h"><span class="id">N</span><h2>Reliability and security watch</h2><span class="chip new">Proposed</span></div>
+    <div class="kpis" data-kpis="logging5xx:Log endpoint 500s:down:count"></div>
+    <div class="cols">
+      <div class="box"><div class="box-h"><h3>HTTP 500 on logging.digitalocean.com</h3><span class="tag" data-prov></span></div>
+        <div class="chart" data-keys="logging5xx"></div></div>
+      <div class="box"><div class="box-h"><h3>Signals, 25 minutes</h3><span class="tag m">Measured · 25 files</span></div>
+        <div class="bars" data-bars='[["Log endpoint HTTP 500",6604],["Token scanner calls (3 accepted)",4846],["Directory fuzzing, all 404",1883]]' data-fmt="int"></div></div>
+    </div>
+    <div class="ev"><div class="v"><small>Validated</small>The log-streaming endpoint fails on <b>12%</b> of requests, all on <b>/applications/{id}</b>. The count is steady across the day, so it is chronic, not an incident.</div>
+    <div class="a"><small>3 months adds</small>When it began, whether releases moved it, and which scanner or fuzzing sources return.</div></div>
+  </div>
+</section>
+
+<section id="matrix">
+  <div class="card-h"><h2>Validation matrix</h2></div>
+  <p class="lead">Each use case from the original list, checked against the 25-file sample. The sample is one minute per hour, so it tests feasibility, not trends. Nothing was dropped because of sample size.</p>
+  <div class="card"><div class="tw"><table class="mx">
+    <thead><tr><th>Use case</th><th>Verdict</th><th>What the sample showed</th><th>What 3 months of per-minute data adds</th></tr></thead>
+    <tbody>
+    <tr><td>A Agent identification</td><td><span class="chip chg">Validated, changed</span></td><td>Named agents separate by user agent. JA3 is shared with generic Node and Bun. Request headers are empty in every row.</td><td>Stable clusters, new-agent alerts, a labeled set for a behavior classifier.</td></tr>
+    <tr><td>B Adoption funnel</td><td><span class="chip chg">Validated, changed</span></td><td>401 is the OAuth challenge. Completion by IP is 73 to 97%. IP-based retention is noisy.</td><td>Weekly cohorts and retention once a token or account key is joined.</td></tr>
+    <tr><td>C Auth friction</td><td><span class="chip ok">Validated</span></td><td>1.9% of 401 IPs recover in the same minute. One endpoint family and one client dominate.</td><td>Loop duration, recovery time, effect of fixes.</td></tr>
+    <tr><td>D Regional demand</td><td><span class="chip ok">Validated</span></td><td>Country, edge and OTLP region all usable. Singapore p95 is about 1.7 times New York on the API.</td><td>Growth curves, day-of-week, p95 trends after launches.</td></tr>
+    <tr><td>E Docs and content</td><td><span class="chip ok">Validated</span></td><td>Crawler and browser reads separable. 404 defects found. Markdown and llms.txt are fetched.</td><td>Per-page agent demand and 404 trends.</td></tr>
+    <tr><td>F Migration tracking</td><td><span class="chip join">Needs join</span></td><td>Only 15.4% of MCP IPs match console IPs. No account ID in the logs.</td><td>Possible only with an account or token join in ADS.</td></tr>
+    <tr><td>G Abuse intelligence</td><td><span class="chip ok">Validated</span></td><td>80 to 86% of error volume comes from persistent IPs.</td><td>Offender lifetime and cost, allowlist for verified agents.</td></tr>
+    <tr><td>H Telemetry fleet</td><td><span class="chip ok">Validated</span></td><td>One build sends 82.3%. Error rate about 0.004%. Telemetry is 86% of rows.</td><td>Capacity forecast, migration speed, regional error rates.</td></tr>
+    <tr><td>I Ask the edge</td><td><span class="chip fut">Needs semantic layer</span></td><td>Cannot be tested from logs. "Agent" is ambiguous (do-agent) and telemetry skews answers.</td><td>Golden questions run against the full dataset.</td></tr>
+    <tr><td>J Crawler ledger</td><td><span class="chip chg">Validated, changed</span></td><td>Verified flag usable, UTM usable, no 402s, no JA4 or category fields.</td><td>Per-URL ratios and shadow-priced revenue.</td></tr>
+    <tr><td>K Cost to serve</td><td><span class="chip new">Proposed</span></td><td>Crawler views cost 1.7 times the bytes of browser views.</td><td>Cost per operator and caching savings.</td></tr>
+    <tr><td>L Anomaly timeline</td><td><span class="chip new">Proposed</span></td><td>429 counts vary 3.4 times across sampled minutes.</td><td>Per-minute detection tied to releases.</td></tr>
+    <tr><td>M Version readiness</td><td><span class="chip new">Proposed</span></td><td>Old and new client versions both cause errors.</td><td>Adoption curves and deprecation dates.</td></tr>
+    <tr><td>N Reliability and security</td><td><span class="chip new">Proposed</span></td><td>Log endpoint 500 rate is 12%. Scanner and fuzzing traffic present.</td><td>Onset dates and recurring sources.</td></tr>
+    </tbody></table></div></div>
+</section>
+
+<p class="foot">Measured chips mark figures computed from the 25 sample files (one sampled minute per hour on 2026-11-10 UTC). Illustrative chips mark synthetic series built from those baselines with assumed growth, so the monthly and daily shapes show what the screens will look like, not what happened. In the hourly view, charts use the measured sample. Customer domains and client IPs are excluded; IPs were hashed before counting.</p>
+</div>
+<div class="tip" id="gtip"></div>
+
+<script>
+const MOCK={"hourly":[{"t":"00:00","n":575710,"telemetry":501247,"browser":30050,"sdk_infra":20501,"http_lib":14292,"ai_client":193,"crawler":1769,"api_total":29641,"api401":7669,"api429":4229,"logging5xx":284,"mcp":134,"pv_human":737,"pv_crawler":295,"pv_other":118,"cr_training":62,"cr_search":45,"cr_user":8,"cr_monitor":97,"cr_other":83,"r_fra1":113253,"r_nyc3":68530,"r_ams3":63995,"r_nbg1":56259,"r_sgp1":43602,"r_other":155608},{"t":"00:29","n":591498,"telemetry":509467,"browser":30254,"sdk_infra":23038,"http_lib":15804,"ai_client":167,"crawler":3182,"api_total":32100,"api401":8503,"api429":4942,"logging5xx":278,"mcp":115,"pv_human":815,"pv_crawler":365,"pv_other":130,"cr_training":51,"cr_search":115,"cr_user":13,"cr_monitor":82,"cr_other":104,"r_fra1":115821,"r_nyc3":70184,"r_ams3":65360,"r_nbg1":57574,"r_sgp1":43988,"r_other":156540},{"t":"01:30","n":554546,"telemetry":485071,"browser":26159,"sdk_infra":19751,"http_lib":14160,"ai_client":115,"crawler":2488,"api_total":28840,"api401":8379,"api429":2503,"logging5xx":247,"mcp":91,"pv_human":841,"pv_crawler":282,"pv_other":151,"cr_training":45,"cr_search":27,"cr_user":6,"cr_monitor":78,"cr_other":126,"r_fra1":109693,"r_nyc3":67234,"r_ams3":61594,"r_nbg1":54765,"r_sgp1":42776,"r_other":149009},{"t":"02:29","n":561369,"telemetry":489515,"browser":27661,"sdk_infra":20928,"http_lib":13816,"ai_client":194,"crawler":1446,"api_total":30205,"api401":8210,"api429":4186,"logging5xx":258,"mcp":93,"pv_human":928,"pv_crawler":260,"pv_other":135,"cr_training":60,"cr_search":54,"cr_user":1,"cr_monitor":69,"cr_other":76,"r_fra1":111165,"r_nyc3":67911,"r_ams3":61881,"r_nbg1":55908,"r_sgp1":42311,"r_other":150339},{"t":"03:30","n":585664,"telemetry":510774,"browser":29450,"sdk_infra":21640,"http_lib":14053,"ai_client":114,"crawler":1492,"api_total":30862,"api401":8882,"api429":3635,"logging5xx":268,"mcp":74,"pv_human":833,"pv_crawler":305,"pv_other":152,"cr_training":56,"cr_search":83,"cr_user":9,"cr_monitor":92,"cr_other":65,"r_fra1":116144,"r_nyc3":70116,"r_ams3":65003,"r_nbg1":58129,"r_sgp1":45056,"r_other":156326},{"t":"04:29","n":554346,"telemetry":481762,"browser":26363,"sdk_infra":21268,"http_lib":14371,"ai_client":138,"crawler":3867,"api_total":30026,"api401":8034,"api429":3908,"logging5xx":250,"mcp":79,"pv_human":557,"pv_crawler":306,"pv_other":118,"cr_training":71,"cr_search":94,"cr_user":12,"cr_monitor":76,"cr_other":53,"r_fra1":110072,"r_nyc3":65574,"r_ams3":61278,"r_nbg1":54427,"r_sgp1":42025,"r_other":148386},{"t":"05:29","n":595344,"telemetry":521222,"browser":29509,"sdk_infra":22534,"http_lib":14065,"ai_client":127,"crawler":1155,"api_total":31381,"api401":9864,"api429":2516,"logging5xx":265,"mcp":88,"pv_human":820,"pv_crawler":260,"pv_other":116,"cr_training":69,"cr_search":47,"cr_user":10,"cr_monitor":82,"cr_other":52,"r_fra1":117506,"r_nyc3":70756,"r_ams3":67858,"r_nbg1":58507,"r_sgp1":46030,"r_other":160565},{"t":"06:30","n":593353,"telemetry":517935,"browser":29573,"sdk_infra":22833,"http_lib":14386,"ai_client":164,"crawler":1948,"api_total":31680,"api401":7275,"api429":5081,"logging5xx":291,"mcp":114,"pv_human":364,"pv_crawler":284,"pv_other":118,"cr_training":78,"cr_search":38,"cr_user":11,"cr_monitor":83,"cr_other":74,"r_fra1":118688,"r_nyc3":70952,"r_ams3":65615,"r_nbg1":58279,"r_sgp1":44947,"r_other":159454},{"t":"07:30","n":525254,"telemetry":455367,"browser":29274,"sdk_infra":18328,"http_lib":14151,"ai_client":100,"crawler":1267,"api_total":27859,"api401":7175,"api429":2255,"logging5xx":225,"mcp":75,"pv_human":336,"pv_crawler":207,"pv_other":135,"cr_training":51,"cr_search":27,"cr_user":4,"cr_monitor":64,"cr_other":61,"r_fra1":103164,"r_nyc3":62533,"r_ams3":58733,"r_nbg1":51584,"r_sgp1":39202,"r_other":140151},{"t":"08:29","n":612883,"telemetry":527050,"browser":38256,"sdk_infra":22944,"http_lib":16434,"ai_client":112,"crawler":1416,"api_total":31446,"api401":9058,"api429":3343,"logging5xx":268,"mcp":83,"pv_human":453,"pv_crawler":271,"pv_other":149,"cr_training":57,"cr_search":43,"cr_user":24,"cr_monitor":102,"cr_other":45,"r_fra1":119213,"r_nyc3":72039,"r_ams3":67609,"r_nbg1":59774,"r_sgp1":45616,"r_other":162799},{"t":"09:30","n":657717,"telemetry":563953,"browser":40661,"sdk_infra":25303,"http_lib":17536,"ai_client":152,"crawler":1724,"api_total":36591,"api401":8676,"api429":4542,"logging5xx":294,"mcp":116,"pv_human":584,"pv_crawler":323,"pv_other":161,"cr_training":55,"cr_search":41,"cr_user":13,"cr_monitor":100,"cr_other":114,"r_fra1":128337,"r_nyc3":76813,"r_ams3":71761,"r_nbg1":63700,"r_sgp1":49146,"r_other":174196},{"t":"10:30","n":616081,"telemetry":530515,"browser":39260,"sdk_infra":21997,"http_lib":15100,"ai_client":145,"crawler":1841,"api_total":31149,"api401":7737,"api429":3458,"logging5xx":314,"mcp":95,"pv_human":473,"pv_crawler":263,"pv_other":124,"cr_training":55,"cr_search":31,"cr_user":19,"cr_monitor":93,"cr_other":65,"r_fra1":120593,"r_nyc3":73045,"r_ams3":68500,"r_nbg1":59862,"r_sgp1":46448,"r_other":162067},{"t":"11:29","n":614425,"telemetry":524461,"browser":39928,"sdk_infra":24423,"http_lib":16013,"ai_client":152,"crawler":1896,"api_total":33607,"api401":10501,"api429":3286,"logging5xx":261,"mcp":115,"pv_human":381,"pv_crawler":305,"pv_other":117,"cr_training":51,"cr_search":42,"cr_user":11,"cr_monitor":104,"cr_other":97,"r_fra1":118518,"r_nyc3":71560,"r_ams3":67723,"r_nbg1":59505,"r_sgp1":45637,"r_other":161518},{"t":"12:30","n":584796,"telemetry":500826,"browser":37464,"sdk_infra":22475,"http_lib":14746,"ai_client":181,"crawler":1405,"api_total":30930,"api401":7377,"api429":4634,"logging5xx":279,"mcp":127,"pv_human":550,"pv_crawler":245,"pv_other":116,"cr_training":49,"cr_search":37,"cr_user":6,"cr_monitor":71,"cr_other":82,"r_fra1":113527,"r_nyc3":68320,"r_ams3":64053,"r_nbg1":56805,"r_sgp1":43689,"r_other":154432},{"t":"13:30","n":607156,"telemetry":518840,"browser":43038,"sdk_infra":21129,"http_lib":14264,"ai_client":179,"crawler":1759,"api_total":29500,"api401":8090,"api429":2436,"logging5xx":248,"mcp":94,"pv_human":415,"pv_crawler":242,"pv_other":137,"cr_training":31,"cr_search":57,"cr_user":11,"cr_monitor":75,"cr_other":68,"r_fra1":117820,"r_nyc3":70808,"r_ams3":67494,"r_nbg1":58491,"r_sgp1":44705,"r_other":159522},{"t":"14:30","n":635352,"telemetry":535340,"browser":44772,"sdk_infra":26667,"http_lib":16237,"ai_client":273,"crawler":1924,"api_total":37703,"api401":9881,"api429":4849,"logging5xx":253,"mcp":134,"pv_human":626,"pv_crawler":289,"pv_other":168,"cr_training":55,"cr_search":53,"cr_user":7,"cr_monitor":85,"cr_other":89,"r_fra1":120182,"r_nyc3":73926,"r_ams3":68590,"r_nbg1":61307,"r_sgp1":46543,"r_other":164792},{"t":"14:39","n":562003,"telemetry":471600,"browser":43236,"sdk_infra":21543,"http_lib":15268,"ai_client":133,"crawler":2037,"api_total":31803,"api401":7135,"api429":4220,"logging5xx":229,"mcp":116,"pv_human":601,"pv_crawler":306,"pv_other":142,"cr_training":64,"cr_search":57,"cr_user":11,"cr_monitor":78,"cr_other":96,"r_fra1":106437,"r_nyc3":65172,"r_ams3":60746,"r_nbg1":53913,"r_sgp1":40005,"r_other":145327},{"t":"15:29","n":626116,"telemetry":531376,"browser":44264,"sdk_infra":23878,"http_lib":15844,"ai_client":174,"crawler":1446,"api_total":33421,"api401":9327,"api429":3042,"logging5xx":290,"mcp":139,"pv_human":421,"pv_crawler":238,"pv_other":124,"cr_training":56,"cr_search":25,"cr_user":7,"cr_monitor":82,"cr_other":68,"r_fra1":120214,"r_nyc3":72696,"r_ams3":68365,"r_nbg1":60085,"r_sgp1":45901,"r_other":164115},{"t":"16:30","n":553265,"telemetry":472363,"browser":37078,"sdk_infra":20354,"http_lib":14030,"ai_client":155,"crawler":1507,"api_total":29023,"api401":7035,"api429":3695,"logging5xx":222,"mcp":120,"pv_human":357,"pv_crawler":236,"pv_other":109,"cr_training":33,"cr_search":28,"cr_user":11,"cr_monitor":77,"cr_other":87,"r_fra1":106502,"r_nyc3":64717,"r_ams3":60805,"r_nbg1":53032,"r_sgp1":40685,"r_other":146622},{"t":"17:29","n":559641,"telemetry":474316,"browser":38794,"sdk_infra":22026,"http_lib":14890,"ai_client":203,"crawler":2080,"api_total":30265,"api401":9543,"api429":2724,"logging5xx":233,"mcp":141,"pv_human":483,"pv_crawler":273,"pv_other":439,"cr_training":42,"cr_search":51,"cr_user":30,"cr_monitor":75,"cr_other":75,"r_fra1":108016,"r_nyc3":64605,"r_ams3":60281,"r_nbg1":53836,"r_sgp1":41526,"r_other":146052},{"t":"18:29","n":672139,"telemetry":571548,"browser":43721,"sdk_infra":28435,"http_lib":17161,"ai_client":221,"crawler":1936,"api_total":39132,"api401":9049,"api429":6889,"logging5xx":298,"mcp":98,"pv_human":464,"pv_crawler":317,"pv_other":148,"cr_training":43,"cr_search":110,"cr_user":2,"cr_monitor":93,"cr_other":69,"r_fra1":129338,"r_nyc3":78193,"r_ams3":74483,"r_nbg1":64274,"r_sgp1":49609,"r_other":175651},{"t":"19:30","n":608096,"telemetry":520341,"browser":39301,"sdk_infra":23222,"http_lib":14800,"ai_client":213,"crawler":2285,"api_total":31868,"api401":10087,"api429":2042,"logging5xx":255,"mcp":138,"pv_human":313,"pv_crawler":216,"pv_other":128,"cr_training":15,"cr_search":64,"cr_user":6,"cr_monitor":78,"cr_other":53,"r_fra1":119230,"r_nyc3":71064,"r_ams3":66788,"r_nbg1":57981,"r_sgp1":45052,"r_other":160226},{"t":"20:29","n":526862,"telemetry":451989,"browser":32225,"sdk_infra":20765,"http_lib":13193,"ai_client":120,"crawler":1442,"api_total":28369,"api401":7863,"api429":4114,"logging5xx":255,"mcp":94,"pv_human":601,"pv_crawler":191,"pv_other":115,"cr_training":8,"cr_search":44,"cr_user":6,"cr_monitor":75,"cr_other":58,"r_fra1":102610,"r_nyc3":61540,"r_ams3":58834,"r_nbg1":49982,"r_sgp1":38807,"r_other":140216},{"t":"21:29","n":530768,"telemetry":454380,"browser":32590,"sdk_infra":19908,"http_lib":14019,"ai_client":130,"crawler":1995,"api_total":28837,"api401":8001,"api429":3323,"logging5xx":252,"mcp":100,"pv_human":295,"pv_crawler":208,"pv_other":117,"cr_training":8,"cr_search":38,"cr_user":9,"cr_monitor":65,"cr_other":88,"r_fra1":103847,"r_nyc3":62169,"r_ams3":58367,"r_nbg1":51469,"r_sgp1":39477,"r_other":139051},{"t":"22:30","n":589772,"telemetry":508251,"browser":33548,"sdk_infra":22357,"http_lib":15617,"ai_client":107,"crawler":2079,"api_total":31555,"api401":8550,"api429":3512,"logging5xx":287,"mcp":55,"pv_human":363,"pv_crawler":239,"pv_other":140,"cr_training":6,"cr_search":40,"cr_user":9,"cr_monitor":87,"cr_other":97,"r_fra1":116086,"r_nyc3":70138,"r_ams3":65182,"r_nbg1":57032,"r_sgp1":44267,"r_other":155546}],"cost":{"human":{"views":13611,"kb_per_view":67.8,"origin_ms_per_view":193.0},"crawler":{"views":6726,"kb_per_view":114.1,"origin_ms_per_view":220.0},"other":{"views":3607,"kb_per_view":138.5,"origin_ms_per_view":137.0}},"cm":[{"version":"v1.19","s401":30307,"s429":4268},{"version":"v1.18","s401":26801,"s429":385},{"version":"v1.17","s401":16647,"s429":8388},{"version":"v1.13","s401":17728,"s429":4687},{"version":"v1.12","s401":13107,"s429":5294},{"version":"v1.21","s401":10,"s429":17192},{"version":"v1.16","s401":12560,"s429":2818},{"version":"v1.15","s401":5179,"s429":4623}]};
+const HR=MOCK.hourly;
+HR.forEach(h=>{h.api401r=h.api401/h.api_total*100;h.api429r=h.api429/h.api_total*100});
+const nf=new Intl.NumberFormat('en-US');
+const compact=v=>{const a=Math.abs(v);return a>=1e9?(v/1e9).toFixed(a>=1e10?0:1)+'B':a>=1e6?(v/1e6).toFixed(a>=1e7?0:1)+'M':a>=1e3?(v/1e3).toFixed(a>=1e4?0:1)+'k':(a>=100?v.toFixed(0):a>=10?v.toFixed(1):v.toFixed(2)).replace(/\.?0+$/,'')};
+const NAMES={browser:'Browsers',sdk_infra:'SDKs and infra agents',http_lib:'HTTP libraries',ai_client:'AI and MCP clients',crawler:'Crawlers and monitors',api401r:'401 rate',api429r:'429 rate',mcp:'MCP requests',
+ r_fra1:'Frankfurt',r_nyc3:'New York',r_ams3:'Amsterdam',r_nbg1:'Nuremberg',r_sgp1:'Singapore',pv_human:'Browser views',pv_crawler:'Crawler views',telemetry:'OTLP requests',
+ cr_training:'Training',cr_search:'Search index',cr_user:'User-triggered',cr_monitor:'Monitors',logging5xx:'HTTP 500'};
+const COLORS=['var(--c1)','var(--c2)','var(--c3)','var(--c4)','var(--c5)'];
+const RATE=new Set(['api401r','api429r']);
+// per-key assumptions for synthetic series: growth per 30 days, weekend factor
+const SPEC={browser:[.01,.76],sdk_infra:[.04,.95],http_lib:[.03,.93],ai_client:[.35,.88],crawler:[.09,1],mcp:[.55,.72],telemetry:[.06,.97],
+ r_fra1:[.05,.97],r_nyc3:[.04,.97],r_ams3:[.06,.97],r_nbg1:[.08,.97],r_sgp1:[.13,.97],pv_human:[.02,.78],pv_crawler:[.1,1],
+ cr_training:[.12,1],cr_search:[.05,1],cr_user:[.4,.9],cr_monitor:[0,1],logging5xx:[0,1],api401r:[0,1],api429r:[0,1]};
+const NDAYS=91,START=Date.UTC(2026,7,11);
+const DATES=[...Array(NDAYS)].map((_,i)=>new Date(START+i*864e5));
+const MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const dlabel=d=>MON[d.getUTCMonth()]+' '+d.getUTCDate();
+const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const hmean=k=>HR.reduce((s,h)=>s+h[k],0)/HR.length;
+const memo={};
+function dailySeries(k){
+  if(memo[k])return memo[k];
+  const r=rng([...k].reduce((s,c)=>s+c.charCodeAt(0)*31,7)),[g,we]=SPEC[k]||[0,1],rate=RATE.has(k);
+  const base=rate?hmean(k):hmean(k)*1440;
+  const out=DATES.map((d,i)=>{
+    const dow=d.getUTCDay(),wk=(dow===0||dow===6)?we:1,n=1+(r()-.5)*(rate?.14:.07);
+    let v=base*Math.pow(1+g,i/30)*wk*n;
+    if(k==='ai_client'&&i>=48)v*=1.18;
+    if(k==='api429r'&&[34,61,83].includes(i))v*=1.9;
+    if(k==='logging5xx'&&i>=40)v*=1.06;
+    return v});
+  return memo[k]=out;
+}
+function weekly(k){const d=dailySeries(k),o=[];for(let w=0;w<13;w++){const s=d.slice(w*7,w*7+7);o.push(RATE.has(k)?s.reduce((a,b)=>a+b,0)/7:s.reduce((a,b)=>a+b,0))}return o}
+function months(k){const d=dailySeries(k),b=[[0,30],[30,60],[60,91]];return b.map(([a,c])=>{const s=d.slice(a,c);return RATE.has(k)?s.reduce((x,y)=>x+y,0)/s.length:s.reduce((x,y)=>x+y,0)})}
+function series(k,g){
+  if(g==='hourly')return {x:HR.map(h=>h.t),y:HR.map(h=>h[k]),measured:true};
+  if(g==='daily')return {x:DATES.map(dlabel),y:dailySeries(k),measured:false};
+  return {x:[...Array(13)].map((_,w)=>dlabel(DATES[w*7])),y:weekly(k),measured:false};
+}
+const UNIT={hourly:'per sampled minute',daily:'per day',monthly:'per week'};
+const gOf=el=>{const s=el&&el.closest?el.closest('section'):null;return (s&&s.dataset.g)||'daily'};
+const tip=document.getElementById('gtip');
+
+function drawChart(el){
+  const GRAN=gOf(el);
+  const keys=el.dataset.keys.split(','),idx=el.dataset.index==='1',rate=el.dataset.unit==='rate'||keys.every(k=>RATE.has(k));
+  const share=el.dataset.share;
+  el.replaceChildren();
+  const W=Math.max(el.clientWidth,300),H=250,M={l:48,r:14,t:12,b:28};
+  let S=keys.map(k=>({k,...series(k,GRAN)}));
+  if(share){const o=series(share,GRAN);S=[{k:keys[0]+'_share',x:S[0].x,y:S[0].y.map((v,i)=>v/(v+o.y[i])*100),measured:S[0].measured}];}
+  const isRate=rate||!!share;
+  if(idx)S=S.map(s=>{const m=s.y.reduce((a,b)=>a+b,0)/s.y.length;return {...s,y:s.y.map(v=>v/m*100)}});
+  const n=S[0].y.length;
+  let fc=[];
+  if(el.dataset.forecast&&GRAN!=='hourly'){
+    const y=S[0].y,m=Math.min(y.length,GRAN==='daily'?30:8),xs=[...Array(m).keys()],ys=y.slice(-m);
+    const mx=xs.reduce((a,b)=>a+b,0)/m,my=ys.reduce((a,b)=>a+b,0)/m;
+    const sl=xs.reduce((s,x,i)=>s+(x-mx)*(ys[i]-my),0)/xs.reduce((s,x)=>s+(x-mx)**2,0);
+    const hz=GRAN==='daily'?14:4;fc=[...Array(hz)].map((_,i)=>my+sl*(m-1+i+1-mx));
+  }
+  const total=n+fc.length;
+  const all=S.flatMap(s=>s.y).concat(fc);
+  let lo=Math.min(...all),hi=Math.max(...all);
+  if(!isRate&&!idx&&lo>0)lo=Math.max(0,lo-(hi-lo)*.15);
+  if(isRate||idx){const p=(hi-lo)*.12||1;lo=Math.max(0,lo-p);hi+=p}else hi+=(hi-lo)*.08;
+  const X=i=>M.l+i*(W-M.l-M.r)/Math.max(total-1,1),Y=v=>M.t+(1-(v-lo)/(hi-lo||1))*(H-M.t-M.b);
+  const NS='http://www.w3.org/2000/svg';const svg=document.createElementNS(NS,'svg');svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.setAttribute('role','img');
+  svg.setAttribute('aria-label',keys.map(k=>NAMES[k]||k).join(', ')+' over time');
+  let h='';
+  for(let i=0;i<=4;i++){const v=lo+(hi-lo)*i/4;h+=`<line x1="${M.l}" x2="${W-M.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--grid)"/><text x="${M.l-6}" y="${Y(v)+3}" text-anchor="end">${isRate?(v.toFixed(v<10?1:0)+'%'):compact(v)}</text>`}
+  const step=Math.ceil(n/6);S[0].x.forEach((l,i)=>{if(i%step===0)h+=`<text x="${X(i)}" y="${H-8}" text-anchor="middle">${l}</text>`});
+  if(el.dataset.band){const y=S[0].y,m=y.reduce((a,b)=>a+b,0)/n,sd=Math.sqrt(y.reduce((a,b)=>a+(b-m)**2,0)/n);
+    h+=`<rect x="${M.l}" width="${W-M.l-M.r}" y="${Y(Math.min(m+2*sd,hi))}" height="${Math.max(0,Y(Math.max(m-2*sd,lo))-Y(Math.min(m+2*sd,hi)))}" fill="var(--accent-soft)" opacity=".6"/>`;
+    el._flag={m,sd}}
+  S.forEach((s,si)=>{
+    const c=COLORS[si%COLORS.length];
+    h+=`<path d="${s.y.map((v,i)=>(i?'L':'M')+X(i).toFixed(1)+' '+Y(v).toFixed(1)).join('')}" fill="none" stroke="${c}" stroke-width="2"/>`;
+    h+=`<circle cx="${X(n-1)}" cy="${Y(s.y[n-1])}" r="3.5" fill="${c}"/>`;
+    if(el._flag&&si===0)s.y.forEach((v,i)=>{if(v>el._flag.m+2*el._flag.sd)h+=`<circle cx="${X(i)}" cy="${Y(v)}" r="4" fill="var(--crit)"/>`});
+  });
+  if(fc.length){const c='var(--c3)';h+=`<path d="${[S[0].y[n-1],...fc].map((v,i)=>(i?'L':'M')+X(n-1+i).toFixed(1)+' '+Y(v).toFixed(1)).join('')}" fill="none" stroke="${c}" stroke-width="2" stroke-dasharray="5 4"/>`}
+  if(GRAN==='daily'&&el.dataset.keys.includes('ai_client')){h+=`<line x1="${X(48)}" x2="${X(48)}" y1="${M.t}" y2="${H-M.b}" stroke="var(--muted)" stroke-dasharray="2 3"/><text x="${X(48)+4}" y="${M.t+10}">illustrative launch</text>`}
+  h+=`<line id="cur" y1="${M.t}" y2="${H-M.b}" stroke="var(--muted)" stroke-dasharray="3 3" style="display:none"/>`;
+  svg.innerHTML=h;el.append(svg);
+  const cur=svg.querySelector('#cur');
+  svg.addEventListener('mousemove',e=>{
+    const r=svg.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*W;let i=Math.round((px-M.l)/((W-M.l-M.r)/Math.max(total-1,1)));i=Math.max(0,Math.min(n-1,i));
+    cur.setAttribute('x1',X(i));cur.setAttribute('x2',X(i));cur.style.display='';
+    tip.style.display='block';
+    tip.textContent='';
+    const hd=document.createElement('div');hd.textContent=S[0].x[i]+(GRAN==='hourly'?' UTC':'');tip.append(hd);
+    S.forEach(s=>{const d=document.createElement('div');d.textContent=(NAMES[s.k]||s.k.replace('_share',' share'))+': '+(isRate?s.y[i].toFixed(1)+'%':idx?s.y[i].toFixed(0)+' (index)':compact(s.y[i]));tip.append(d)});
+    tip.style.left=Math.min(e.clientX+14,innerWidth-tip.offsetWidth-8)+'px';tip.style.top=(e.clientY+14)+'px';tip.style.position='fixed';
+  });
+  svg.addEventListener('mouseleave',()=>{tip.style.display='none';cur.style.display='none'});
+  const note=document.createElement('div');note.className='gnote';note.textContent=(idx?'Index, average = 100':isRate?'Percent of API requests':UNIT[GRAN]);el.append(note);
+}
+function legends(){
+  document.querySelectorAll('[data-leg]').forEach(l=>{
+    const ch=l.parentElement.querySelector('.chart');const keys=ch.dataset.keys.split(',');
+    l.replaceChildren(...keys.map((k,i)=>{const s=document.createElement('span');const sw=document.createElement('i');sw.style.background=COLORS[i%COLORS.length];s.append(sw,NAMES[k]||k);return s}));
+  });
+  const ol=document.getElementById('ovleg');ol.replaceChildren(...document.getElementById('ovchart').dataset.keys.split(',').map((k,i)=>{const s=document.createElement('span');const sw=document.createElement('i');sw.style.background=COLORS[i];s.append(sw,NAMES[k]);return s}));
+}
+function fmtK(k,v){return RATE.has(k)?v.toFixed(1)+'%':compact(v)}
+function kpiFor(k,g){
+  const rate=RATE.has(k);
+  if(g==='hourly'){const y=HR.map(h=>h[k]);const mean=y.reduce((a,b)=>a+b,0)/y.length,mx=Math.max(...y),mn=Math.min(...y);
+    return {v:fmtK(k,mean),s:rate?'avg, peak '+mx.toFixed(1)+'%':'avg per minute, peak '+(mx/mn).toFixed(1)+'x trough',d:null}}
+  if(g==='daily'){const y=dailySeries(k),a=y.slice(-7),b=y.slice(-14,-7),sa=a.reduce((x,z)=>x+z,0),sb=b.reduce((x,z)=>x+z,0);
+    const va=rate?sa/7:sa,vb=rate?sb/7:sb;return {v:fmtK(k,va),s:rate?'last 7 days avg':'last 7 days',d:rate?va-vb:(va/vb-1)*100,pp:rate}}
+  const m=months(k);return {v:fmtK(k,m[2]),s:rate?'latest 30 days avg':'latest 30 days',d:rate?m[2]-m[1]:(m[2]/m[1]-1)*100,pp:rate};
+}
+function kpis(){
+  document.querySelectorAll('[data-kpis]').forEach(box=>{
+    box.replaceChildren(...box.dataset.kpis.split(';').map(def=>{
+      const [k,label,dir]=def.split(':'),r=kpiFor(k,gOf(box)),d=document.createElement('div');d.className='kpi';
+      const l=document.createElement('div');l.className='l';l.textContent=label;
+      const v=document.createElement('div');v.className='v';v.textContent=r.v;
+      const s=document.createElement('div');s.className='s';const t=document.createElement('span');t.textContent=r.s;s.append(t);
+      if(r.d!=null){const c=document.createElement('span');const good=dir==='up'?r.d>0:dir==='down'?r.d<0:null;
+        c.className='dl'+(good===true?' good':good===false?' bad':'');c.textContent=(r.d>0?'+':'')+r.d.toFixed(1)+(r.pp?' pp':'%')+(gOf(box)==='daily'?' WoW':' MoM');s.append(c)}
+      d.append(l,v,s);return d}));
+  });
+  const ov=document.getElementById('ovk');
+  const defs=[['browser','Browsers','neutral'],['sdk_infra','SDKs and infra','neutral'],['ai_client','AI and MCP clients','up'],['crawler','Crawlers and monitors','neutral'],['api429r','API 429 rate','down']];
+  ov.replaceChildren(...defs.map(([k,label,dir])=>{const r=kpiFor(k,gOf(ov)),d=document.createElement('div');d.className='kpi';
+    const l=document.createElement('div');l.className='l';l.textContent=label;const v=document.createElement('div');v.className='v';v.textContent=r.v;
+    const s=document.createElement('div');s.className='s';const t=document.createElement('span');t.textContent=r.s;s.append(t);
+    if(r.d!=null){const c=document.createElement('span');const good=dir==='up'?r.d>0:dir==='down'?r.d<0:null;c.className='dl'+(good===true?' good':good===false?' bad':'');c.textContent=(r.d>0?'+':'')+r.d.toFixed(1)+(r.pp?' pp':'%')+(gOf(ov)==='daily'?' WoW':' MoM');s.append(c)}
+    d.append(l,v,s);return d}));
+}
+function bars(){
+  document.querySelectorAll('[data-bars]').forEach(b=>{
+    const rows=JSON.parse(b.dataset.bars),max=Math.max(...rows.map(r=>r[1])),pct=b.dataset.fmt==='pct';
+    b.replaceChildren(...rows.map(r=>{const e=document.createElement('div');e.className='br';
+      const n=document.createElement('span');n.className='nm';n.textContent=r[0];n.title=r[0];
+      const t=document.createElement('div');t.className='tr';const f=document.createElement('div');f.className='fl';f.style.width=Math.max(r[1]/max*100,1)+'%';t.append(f);
+      const v=document.createElement('span');v.className='vl';v.textContent=pct?r[1]+'%':nf.format(r[1]);e.append(n,t,v);return e}));
+  });
+}
+function provTags(){
+  const set=(t)=>{const g=gOf(t);if(g==='hourly'){t.className='tag m';t.textContent='Measured · 2026-11-10'}else{t.className='tag i';t.textContent='Illustrative'}};
+  document.querySelectorAll('[data-prov]').forEach(set);
+  set(document.getElementById('ovtag'));
+}
+function cohort(){
+  const host=document.getElementById('cohort');
+  const GRAN=gOf(host);
+  host.replaceChildren();
+  const title=document.createElement('h3');title.textContent=GRAN==='hourly'?'Weekly cohort retention':'Weekly cohort retention of new agent clients';host.append(title);
+  if(GRAN==='hourly'){const p=document.createElement('p');p.className='gnote';p.textContent='Cohorts need days of history. Switch to the daily or monthly view.';host.append(p);return}
+  const t=document.createElement('div');t.className='tw';const tb=document.createElement('table');
+  const head='<thead><tr><th>Cohort</th>'+[0,1,2,3,4].map(w=>'<th class="n">W'+w+'</th>').join('')+'</tr></thead>';
+  const r=rng(11);let body='<tbody>';
+  for(let c=0;c<5;c++){body+='<tr><td>'+dlabel(DATES[c*7+28])+'</td>';let v=100;for(let w=0;w<5;w++){if(c+w>4){body+='<td class="n"></td>';continue}
+    const a=w===0?.9+r()*0:.55-.07*w+r()*.05;if(w>0)v=v*a+0;const shade=Math.round(v);body+='<td class="n" style="background:color-mix(in srgb,var(--accent) '+Math.round(v*.45)+'%,transparent)">'+shade+'%</td>'}
+    body+='</tr>'}
+  tb.innerHTML=head+body+'</tbody>';t.append(tb);host.append(t);
+  const n=document.createElement('p');n.className='gnote';n.textContent='Illustrative. Share of a weekly cohort still active.';host.append(n);
+}
+function journey(){
+  const j=document.getElementById('journey');
+  const rows=[['Console users',100],['Added CLI or API use',46],['Began agent or MCP use',12]];
+  j.replaceChildren(...rows.map(r=>{const e=document.createElement('div');e.className='st';const n=document.createElement('span');n.textContent=r[0];
+    const t=document.createElement('div');t.className='tr';const f=document.createElement('div');f.className='fl';f.style.width=r[1]+'%';t.append(f);const v=document.createElement('span');v.className='vl';v.textContent=r[1]+'%';v.style.fontFamily='var(--font-mono)';e.append(n,t,v);return e}));
+}
+const QA=[
+ {q:'Which agent clients grew most in Frankfurt?',tag:'Illustrative',sql:"SELECT agent_client, COUNT(*) AS requests\nFROM cf_request_log r JOIN dim_agent_client USING (client_request_user_agent)\nWHERE edge_colo_code = 'FRA' AND is_telemetry = false\n  AND edge_start_timestamp >= now() - interval '30 days'\nGROUP BY 1 ORDER BY requests DESC LIMIT 5;",
+  cols:['Client','Last 30 days','Change'],rows:[['Claude-User','2,140','+62%'],['Cursor','1,810','+48%'],['codex-mcp-client','960','+85%']]},
+ {q:'What share of MCP sign-ins complete, by client?',tag:'Measured · 25 files',sql:"SELECT agent_client,\n  COUNT(DISTINCT client_ip) FILTER (WHERE edge_response_status IN (200,202)) * 1.0\n  / COUNT(DISTINCT client_ip) AS completion\nFROM cf_request_log\nWHERE client_request_host = 'mcp.digitalocean.com'\nGROUP BY 1 ORDER BY completion DESC;",
+  cols:['Client','Completion'],rows:[['Claude-User','96.9%'],['claude-code','82.1%'],['codex-mcp-client','77.8%'],['Cursor','73.5%']]},
+ {q:'Which API endpoints cause the most 429s?',tag:'Measured · 25 files',sql:"SELECT client_request_path, COUNT(*) AS rate_limited\nFROM cf_request_log\nWHERE client_request_host = 'api.digitalocean.com'\n  AND edge_response_status = 429\nGROUP BY 1 ORDER BY 2 DESC LIMIT 5;",
+  cols:['Endpoint','429s'],rows:[['GET /v2/domains/{zone}/records','72,148'],['GET /v2/droplets','7,890'],['POST /v2/registry/auth','6,449'],['GET /v2/apps/{id}','1,937']]}];
+function ask(){
+  const qs=document.getElementById('qs');let cur=+(qs.dataset.cur||0);
+  qs.replaceChildren(...QA.map((x,i)=>{const b=document.createElement('button');b.type='button';b.textContent=x.q;b.setAttribute('aria-pressed',i===cur);b.onclick=()=>{qs.dataset.cur=i;ask()};return b}));
+  const x=QA[cur];document.getElementById('sql').textContent=x.sql;
+  const t=document.getElementById('qres');
+  t.innerHTML='<thead><tr>'+x.cols.map((c,i)=>'<th'+(i?' class="n"':'')+'>'+c+'</th>').join('')+'</tr></thead><tbody>'+x.rows.map(r=>'<tr>'+r.map((c,i)=>'<td'+(i?' class="n"':'')+'>'+c+'</td>').join('')+'</tr>').join('')+'</tbody>';
+  const cap=document.getElementById('qcap')||document.createElement('p');cap.id='qcap';cap.className='gnote';cap.textContent='Result: '+x.tag+'. SQL is a sketch against the cf_request_log schema.';t.parentElement.append(cap);
+}
+function cm(){
+  const b=document.getElementById('cmrows');b.replaceChildren(...MOCK.cm.map(r=>{const tr=document.createElement('tr');[r.version,nf.format(r.s401),nf.format(r.s429)].forEach((c,i)=>{const td=document.createElement('td');td.textContent=c;if(i)td.className='n';tr.append(td)});return tr}));
+}
+function renderSection(sec){
+  const g=sec.dataset.g||'daily';
+  sec.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.g===g));
+  const n=sec.querySelector('.segwrap .gnote');if(n)n.textContent={monthly:'13 weeks',daily:'91 days',hourly:'25 sampled minutes'}[g];
+  provTags();kpis();sec.querySelectorAll('.chart').forEach(drawChart);if(sec.id==='B')cohort();
+}
+function render(){document.querySelectorAll('section').forEach(renderSection)}
+document.querySelectorAll('section').forEach(sec=>{
+  if(!(sec.querySelector('.chart')||sec.querySelector('[data-kpis]')||sec.id==='overview'))return;
+  sec.dataset.g='daily';const h=sec.querySelector('.card-h');if(!h)return;
+  const w=document.createElement('div');w.className='segwrap';
+  const n=document.createElement('span');n.className='gnote';
+  const seg=document.createElement('div');seg.className='seg';seg.setAttribute('role','group');seg.setAttribute('aria-label','Time view for this section');
+  [['monthly','Monthly'],['daily','Daily'],['hourly','Hourly']].forEach(([g,l])=>{const b=document.createElement('button');b.type='button';b.dataset.g=g;b.textContent=l;b.onclick=()=>{sec.dataset.g=g;renderSection(sec)};seg.append(b)});
+  w.append(n,seg);h.append(w);
+});
+legends();bars();journey();ask();cm();render();
+let rz;new ResizeObserver(()=>{clearTimeout(rz);rz=setTimeout(()=>document.querySelectorAll('.chart').forEach(drawChart),120)}).observe(document.body);
+</script>

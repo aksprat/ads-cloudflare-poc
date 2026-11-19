@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CF Edge Intelligence — ADS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,500;8..60,700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/styles.css"/>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <p class="eyebrow">ADS · cf-http-logs-poc</p>
+    <h1>Edge Log Intelligence</h1>
+    <p class="sub">Live panels from Iceberg <code>cf_request_log</code> (33-column hot path). Client classes follow the handoff taxonomy; OTLP is separated because it dominates volume.</p>
+  </div>
+  <form id="controls" class="controls">
+    <label>Start <input id="start" name="start" value="2026-11-10 14:00:00 UTC"/></label>
+    <label>End <input id="end" name="end" value="2026-11-10 15:00:00 UTC"/></label>
+    <label class="check"><input id="sample" type="checkbox" checked/> Fast sample (1 min / hour)</label>
+    <div class="presets">
+      <button type="button" data-preset="minute">1 minute</button>
+      <button type="button" data-preset="hour">Busy hour</button>
+      <button type="button" data-preset="day">Full day</button>
+    </div>
+    <button type="submit" class="primary" id="loadBtn">Load from ADS</button>
+  </form>
+</header>
+
+<p id="status" class="status" role="status">Iceberg holds raw requests; charts aggregate on read. Fast sample is on by default (~1/60 of rows). Panels load in parallel as each query finishes.</p>
+
+<nav class="nav">
+  <a href="#ingest">Ingest</a>
+  <a href="#overview">Overview</a>
+  <a href="#auth">Auth</a>
+  <a href="#mcp">MCP</a>
+  <a href="#regions">Regions</a>
+  <a href="#telemetry">Telemetry</a>
+  <a href="#cost">Cost</a>
+  <a href="#reliability">Reliability</a>
+</nav>
+
+<main>
+  <section id="ingest">
+    <h2>Ingest health</h2>
+    <p class="lead">Coverage of the selected window — objects polled from S3 and time span in the table.</p>
+    <div class="kpis" id="ingestKpis"></div>
+  </section>
+
+  <section id="overview">
+    <h2>Overview · client mix</h2>
+    <p class="lead">Non‑telemetry requests only. AI/MCP clients are a small share; SDKs and browsers dominate.</p>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Client classes</h3>
+        <div class="bars" id="classBars"></div>
+      </div>
+      <div class="panel">
+        <h3>Hourly shape</h3>
+        <div class="chart" id="hourlyChart"></div>
+        <div class="leg" id="hourlyLeg"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <h3>Top hosts</h3>
+      <div class="tw" id="hostsTable"></div>
+    </div>
+  </section>
+
+  <section id="auth">
+    <h2>C · Auth friction</h2>
+    <p class="lead">401 / 429 / other errors on <code>api.digitalocean.com</code>, paths normalized.</p>
+    <div class="tw" id="apiErrors"></div>
+  </section>
+
+  <section id="mcp">
+    <h2>B · MCP adoption</h2>
+    <p class="lead">Requests to <code>mcp.digitalocean.com</code>. A 401 is usually the OAuth challenge, not a hard failure.</p>
+    <div class="tw" id="mcpTable"></div>
+  </section>
+
+  <section id="regions">
+    <h2>D · Regions &amp; edge latency</h2>
+    <div class="grid2">
+      <div class="panel">
+        <h3>Top countries</h3>
+        <div class="bars" id="regionBars"></div>
+      </div>
+      <div class="panel">
+        <h3>p50 / p95 TTFB by colo (API &amp; console)</h3>
+        <div class="tw" id="coloTable"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="telemetry">
+    <h2>H · Telemetry fleet</h2>
+    <p class="lead">OTLP ingest hosts — expect the majority of all rows.</p>
+    <div class="tw" id="otlpTable"></div>
+  </section>
+
+  <section id="cost">
+    <h2>K · Cost to serve (www / docs HTML)</h2>
+    <div class="tw" id="costTable"></div>
+  </section>
+
+  <section id="reliability">
+    <h2>N · Reliability watch</h2>
+    <p class="lead">Hosts with any 5xx in the window, plus security block/challenge counts.</p>
+    <div class="tw" id="relTable"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  Public PoC · App Platform TOR1 · Source: ADS workspace <code>ads-cloudflare-poc</code> · Data flow <code>cf-http-logs-poc</code>
+</footer>
+<script src="/assets/app.js"></script>
+</body>
+</html>

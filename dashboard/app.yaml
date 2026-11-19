@@ -1,0 +1,30 @@
+name: cf-edge-dashboard
+region: tor
+
+# Create/update with doctl after wiring github.repo in the App Platform UI,
+# or set source_dir=dashboard when connecting the GitHub repo.
+services:
+  - name: web
+    dockerfile_path: Dockerfile
+    source_dir: dashboard
+    http_port: 8080
+    instance_count: 1
+    instance_size_slug: basic-xxs
+    routes:
+      - path: /
+    envs:
+      - key: ADS_QUERY_HOST
+        scope: RUN_TIME
+        type: SECRET
+      - key: DIGITALOCEAN_TOKEN
+        scope: RUN_TIME
+        type: SECRET
+      - key: ADS_TABLE
+        scope: RUN_TIME
+        value: tabular.ads_cloudflare_poc.cf_request_log
+      - key: CACHE_TTL_SECONDS
+        scope: RUN_TIME
+        value: "600"
+      - key: ADS_TIMEOUT_SECONDS
+        scope: RUN_TIME
+        value: "180"

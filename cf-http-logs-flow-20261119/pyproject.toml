@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pipeline-py-s3-gzip"
+version = "0.1.0"
+description = "Gzip NDJSON objects in an S3 bucket in, an Iceberg table out."
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.setuptools]
+packages = ["s3_gzip"]
+
+[tool.setuptools.package-data]
+s3_gzip = ["*.ddl"]
+
+[tool.aidc]
+entry = "s3_gzip.pipeline:Entry"

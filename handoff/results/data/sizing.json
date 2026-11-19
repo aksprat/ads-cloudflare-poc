@@ -1,0 +1,1 @@
+[{"metric":"Rows per minute file","sample":587766,"month_estimate":23438309140},{"metric":"Telemetry rows (OTLP)","sample":505180,"month_estimate":20145038356},{"metric":"Rows excluding telemetry","sample":82586,"month_estimate":3293270784},{"metric":"Compressed GB","sample":0.082,"month_estimate":3269}]

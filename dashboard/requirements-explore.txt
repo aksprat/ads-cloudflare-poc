@@ -1,0 +1,7 @@
+# Local exploration via Overview → Connection Details (DuckDB Python / ADBC).
+# Needs Python 3.11+ (DuckDB 2.x + real quack protocol).
+duckdb>=2.0.0
+adbc-driver-quack>=1.0.1
+pyarrow>=20.0.0
+pandas>=2.2.0
+python-dotenv>=1.0.1

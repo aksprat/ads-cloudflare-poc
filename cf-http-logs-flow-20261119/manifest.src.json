@@ -1,0 +1,38 @@
+{
+  "schema": "aidc.pipeline.manifest/v3",
+  "name": "cf-http-logs-poc",
+  "vm_size": "mv-8vcpu-16gb",
+  "input": {
+    "s3_endpoint": "https://s3.us-west-2.amazonaws.com",
+    "s3_region": "us-west-2",
+    "bucket": "do-cf-logs",
+    "prefix": "logs/20261110/",
+    "secrets": {
+      "s3_access_key_id": "$['my-input-s3'].access_key_id",
+      "s3_secret_access_key": "$['my-input-s3'].secret_access_key"
+    }
+  },
+  "pump": {
+    "class": "aidc.datapump.s3poll",
+    "version": "2.0.0",
+    "options": {
+      "poll_interval": "10s",
+      "lookback": "168h"
+    }
+  },
+  "runtime": {
+    "source": {
+      "class": "aidc_runtime.sources:CsvObjectSource",
+      "options": {
+        "has_header": "false",
+        "delimiter": "\u0001",
+        "max_record_bytes": 4194304,
+        "max_records": 100000,
+        "max_age_ms": 300000
+      }
+    },
+    "sink": {
+      "class": "aidc_runtime.sinks:IcebergSink"
+    }
+  }
+}

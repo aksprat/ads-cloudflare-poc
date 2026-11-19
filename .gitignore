@@ -1,0 +1,29 @@
+.DS_Store
+.env
+**/.env
+*.pyc
+__pycache__/
+.venv/
+**/.venv/
+**/venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Local Cloudflare log samples (multi-GB)
+*.log
+*.log.gz
+*.gz
+!**/testdata/**
+
+# Nested SDK clone (own git history); use internal ads-dataflow-sdk separately
+ads-dataflow-sdk/
+
+# Local Python envs / caches
+cf-http-logs-flow/.venv/
+cf-http-logs-flow-20261119/.venv/
+dashboard/.cache/
+dashboard/.venv/
+dashboard/.venv-explore/
+
+*.bak

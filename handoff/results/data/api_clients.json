@@ -1,0 +1,1 @@
+[{"client":"cert-manager (DNS-01)","status_401":122715,"status_429":55609},{"client":"godo","status_401":25949,"status_429":16539},{"client":"python-digitalocean","status_401":275,"status_429":0},{"client":"curl","status_401":262,"status_429":0},{"client":"ddclient","status_401":108,"status_429":0},{"client":"python-requests","status_401":106,"status_429":0}]
