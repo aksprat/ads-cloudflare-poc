@@ -25,7 +25,15 @@
       <button type="button" data-preset="hour">Busy hour</button>
       <button type="button" data-preset="day">Full day</button>
     </div>
-    <button type="submit" class="primary" id="loadBtn">Load from ADS</button>
+    <div class="load-row">
+      <button type="submit" class="primary" id="loadBtn">Load from ADS</button>
+      <div id="loadState" class="load-state" data-state="idle" aria-live="polite" hidden>
+        <span class="load-spinner" aria-hidden="true"></span>
+        <span class="load-check" aria-hidden="true">✓</span>
+        <span class="load-fail" aria-hidden="true">!</span>
+        <span class="load-label" id="loadLabel"></span>
+      </div>
+    </div>
   </form>
 </header>
 

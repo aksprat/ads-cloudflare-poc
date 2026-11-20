@@ -61,6 +61,21 @@ function setStatus(msg, kind) {
   el.className = "status" + (kind ? " " + kind : "");
 }
 
+function setLoadState(state, label) {
+  const el = $("#loadState");
+  const text = $("#loadLabel");
+  if (!el || !text) return;
+  if (state === "idle") {
+    el.hidden = true;
+    el.dataset.state = "idle";
+    text.textContent = "";
+    return;
+  }
+  el.hidden = false;
+  el.dataset.state = state;
+  text.textContent = label || "";
+}
+
 function bars(el, rows, labelKey, valueKey) {
   if (!rows.length) {
     el.innerHTML = "<p class='lead'>No rows.</p>";
@@ -261,6 +276,7 @@ async function loadProgressive() {
   const t0 = performance.now();
   let done = 0;
   let failed = 0;
+  setLoadState("loading", `Loading 0/${SECTIONS.length}…`);
   setStatus(
     `Loading panels (max ${MAX_PARALLEL} Quack queries at a time, ${sample ? "fast sample" : "full scan"})…`
   );
@@ -279,6 +295,7 @@ async function loadProgressive() {
     } finally {
       done += 1;
       const secs = ((performance.now() - t0) / 1000).toFixed(1);
+      setLoadState("loading", `Loading ${done}/${SECTIONS.length}…`);
       setStatus(
         `Loaded ${done}/${SECTIONS.length} panels in ${secs}s` +
           (failed ? ` · ${failed} failed` : "") +
@@ -288,6 +305,15 @@ async function loadProgressive() {
     }
   });
 
+  const secs = ((performance.now() - t0) / 1000).toFixed(1);
+  if (failed) {
+    setLoadState(
+      "error",
+      `${SECTIONS.length - failed}/${SECTIONS.length} loaded · ${failed} failed · ${secs}s`
+    );
+  } else {
+    setLoadState("done", `Loaded ${SECTIONS.length}/${SECTIONS.length} · ${secs}s`);
+  }
   btn.disabled = false;
 }
 
