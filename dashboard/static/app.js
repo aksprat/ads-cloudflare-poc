@@ -42,7 +42,7 @@ const SECTIONS = [
   { key: "reliability", path: "/api/reliability", render: renderReliability },
 ];
 
-const MAX_PARALLEL = 2;
+const MAX_PARALLEL = 4;
 
 async function mapPool(items, limit, worker) {
   const q = [...items];
@@ -262,7 +262,7 @@ async function loadProgressive() {
   let done = 0;
   let failed = 0;
   setStatus(
-    `Loading panels (max ${MAX_PARALLEL} ADS queries at a time, ${sample ? "fast sample" : "full scan"})…`
+    `Loading panels (max ${MAX_PARALLEL} Quack queries at a time, ${sample ? "fast sample" : "full scan"})…`
   );
 
   const qs = new URLSearchParams({ start, end, sample: String(sample) });
@@ -317,6 +317,6 @@ document.querySelectorAll("[data-preset]").forEach((btn) => {
 fetch("/api/health")
   .then((r) => r.json())
   .then((h) => {
-    if (!h.token_configured) setStatus("DIGITALOCEAN_TOKEN is not configured on the server.", "err");
+    if (!h.token_configured) setStatus("ADS_QUACK_TOKEN is not configured on the server.", "err");
   })
   .catch(() => {});

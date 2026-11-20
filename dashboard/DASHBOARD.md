@@ -11,7 +11,7 @@ Live UI over Cloudflare HTTP logs landed in ADS by data flow **`cf-http-logs-poc
 | Grain | **One row per HTTP request** (Iceberg, ~33 hot-path columns) |
 | Typical volume | ~1.6B rows / day in the PoC backfill; ~1M+ / minute |
 
-The app does **not** read S3 directly. It runs DuckDB SQL through ADS **`POST /query`** with a workspace PAT, aggregates in ADS, and caches JSON results (memory + `dashboard/.cache/`).
+The app does **not** read S3 directly. It runs DuckDB-dialect SQL over the **ADBC Quack** connector (`reader:<password>` from Overview Connection Details), aggregates in the Query Engine, and caches JSON results (memory + `dashboard/.cache/`).
 
 **Filters every panel shares**
 
@@ -23,16 +23,16 @@ Client types (browser, SDK, crawler, AI/MCP, …) are derived in SQL from `clien
 ## How it is built
 
 ```text
-Browser (static/)  →  FastAPI (app/)  →  ADS Query API  →  Iceberg cf_request_log
+Browser (static/)  →  FastAPI (app/)  →  ADBC Quack  →  ADS Query Engine  →  Iceberg cf_request_log
                          ↑ cache
 ```
 
 | Piece | Role |
 |-------|------|
-| `static/` | Single-page UI; loads each panel via its own `/api/…` call (max 2 concurrent) |
+| `static/` | Single-page UI; loads each panel via its own `/api/…` call (max 4 concurrent) |
 | `app/queries.py` | DuckDB SQL for each panel |
 | `app/service.py` | Runs queries, TTL cache, concurrency limit |
-| `app/ads.py` | `POST https://$ADS_QUERY_HOST/query` |
+| `app/ads.py` | ADBC Quack client (`adbc-driver-quack`) |
 | `Dockerfile` / `app.yaml` | App Platform (TOR1) |
 
 ## Sections (what you see)

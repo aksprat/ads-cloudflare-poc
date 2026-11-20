@@ -33,10 +33,12 @@ async def health() -> dict:
     s = get_settings()
     return {
         "ok": True,
+        "connector": "adbc_quack",
         "query_host": s.ads_query_host,
         "table": s.ads_table,
-        "token_configured": bool(s.digitalocean_token),
-        "hint": "Iceberg stores raw rows; dashboards aggregate at query time. Use sample=true (1 minute/hour) for fast loads.",
+        "token_configured": bool(s.ads_quack_token),
+        "concurrency": s.ads_query_concurrency,
+        "hint": "Queries go through ADBC Quack. Iceberg holds raw rows; use sample=true (1 minute/hour) for faster first loads.",
     }
 
 

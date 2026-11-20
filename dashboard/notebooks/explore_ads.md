@@ -1,7 +1,7 @@
 # Explore ADS with DuckDB Python
 
 Use this for notebook-style SQL against `cf_request_log`.  
-The hosted dashboard still uses **HTTP `POST /query`**.
+The hosted dashboard uses the same Quack path via **ADBC** (`app/ads.py`).
 
 ## Overview snippet (works)
 

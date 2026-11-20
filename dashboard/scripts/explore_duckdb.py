@@ -6,8 +6,8 @@ Matches the Control Panel snippet::
     ATTACH 'quack:<host>:443' AS srv (TOKEN 'reader:<password>')
     SELECT * FROM srv.tabular.<schema>.<table> LIMIT 10
 
-This is for laptop / notebook exploration. The App Platform dashboard keeps
-using HTTP ``POST /query`` + cache.
+This is for laptop / notebook exploration. The App Platform dashboard uses the
+same Quack engine via ADBC (``app/ads.py``).
 """
 
 from __future__ import annotations

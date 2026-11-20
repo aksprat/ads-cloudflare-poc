@@ -16,7 +16,7 @@ services:
       - key: ADS_QUERY_HOST
         scope: RUN_TIME
         type: SECRET
-      - key: DIGITALOCEAN_TOKEN
+      - key: ADS_QUACK_TOKEN
         scope: RUN_TIME
         type: SECRET
       - key: ADS_TABLE
@@ -24,7 +24,10 @@ services:
         value: tabular.ads_cloudflare_poc.cf_request_log
       - key: CACHE_TTL_SECONDS
         scope: RUN_TIME
-        value: "600"
+        value: "1800"
       - key: ADS_TIMEOUT_SECONDS
         scope: RUN_TIME
         value: "180"
+      - key: ADS_QUERY_CONCURRENCY
+        scope: RUN_TIME
+        value: "4"

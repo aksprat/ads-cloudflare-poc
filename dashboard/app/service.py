@@ -10,8 +10,16 @@ from .config import Settings
 
 QueryFn = Callable[..., str]
 
-# ADS query endpoint 524s under high fan-out; keep a small pool.
-_QUERY_SEM = asyncio.Semaphore(2)
+_semaphores: dict[int, asyncio.Semaphore] = {}
+
+
+def _query_sem(settings: Settings) -> asyncio.Semaphore:
+    n = max(1, int(settings.ads_query_concurrency or 4))
+    sem = _semaphores.get(n)
+    if sem is None:
+        sem = asyncio.Semaphore(n)
+        _semaphores[n] = sem
+    return sem
 
 
 def _key(name: str, start: Optional[str], end: Optional[str], sample: bool) -> str:
@@ -32,7 +40,7 @@ async def _cached_query(
     if hit is not None:
         return {**hit, "cache": "hit"}
 
-    async with _QUERY_SEM:
+    async with _query_sem(settings):
         # Re-check after waiting — another coroutine may have filled the cache.
         hit = cache.get(ck)
         if hit is not None:

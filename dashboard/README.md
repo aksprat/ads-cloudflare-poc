@@ -7,16 +7,18 @@ Public App Platform PoC: charts over ADS Iceberg table `cf_request_log` (data fl
 ## Stack
 
 - FastAPI + static UI
-- ADS Query API: `POST https://$ADS_QUERY_HOST/query` + `DIGITALOCEAN_TOKEN`
+- **ADBC Quack** to the ADS Query Engine (`adbc-driver-quack` + `ADS_QUACK_TOKEN=reader:<password>`)
 - Disk/memory aggregate cache (default 30 minutes)
+
+> Do **not** use HTTP `POST /query` for this app — that path is for the Control Panel UI. Eng guidance is Quack (ADBC or DuckDB ATTACH).
 
 ## Local run
 
 ```bash
 cd dashboard
-python3 -m venv .venv && source .venv/bin/activate
+python3.11 -m venv .venv && source .venv/bin/activate   # 3.11+ recommended
 pip install -r requirements.txt
-cp .env.example .env   # set DIGITALOCEAN_TOKEN + ADS_QUERY_HOST
+cp .env.example .env   # set ADS_QUACK_TOKEN + ADS_QUERY_HOST
 uvicorn app.main:app --reload --port 8080
 ```
 
@@ -24,11 +26,11 @@ Open http://127.0.0.1:8080 — start with **1 minute** or **Fast sample**.
 
 ## App Platform (TOR1)
 
-Source directory: `dashboard`. Set secrets `ADS_QUERY_HOST`, `DIGITALOCEAN_TOKEN`, and `ADS_TABLE=tabular.ads_cloudflare_poc.cf_request_log`. See `app.yaml`.
+Source directory: `dashboard`. Set secrets `ADS_QUERY_HOST`, `ADS_QUACK_TOKEN`, and `ADS_TABLE=tabular.ads_cloudflare_poc.cf_request_log`. See `app.yaml`.
 
-## Optional: DuckDB / ADBC explore
+## Optional: DuckDB ATTACH explore
 
-Overview → DuckDB Python uses `TOKEN 'reader:<password>'` (not the HTTP PAT). Python 3.11+ and DuckDB 2.x required.
+Same Quack host/token as the dashboard; useful for notebook SQL:
 
 ```bash
 python3.11 -m venv .venv-explore && source .venv-explore/bin/activate
