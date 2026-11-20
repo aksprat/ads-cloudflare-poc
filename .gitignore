@@ -25,5 +25,6 @@ cf-http-logs-flow-20261119/.venv/
 dashboard/.cache/
 dashboard/.venv/
 dashboard/.venv-explore/
+dashboard/.venv-adbc/
 
 *.bak
